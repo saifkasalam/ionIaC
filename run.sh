@@ -1,4 +1,4 @@
 #!/bin/bash
 sudo apt update
 sudo ansible-playbook dlinkconfig.yml 
-sudo ./oneclicksyslog/oneclicksyslog.sh
+#sudo ./oneclicksyslog/oneclicksyslog.sh
