@@ -1,0 +1,14 @@
+---
+- name: Exporting Configuration and verifying the Hash Values
+  hosts: all
+  become: true
+  gather_facts: no
+  tasks:
+    - name: exporting configuration 
+      ios_config:
+       backup: yes
+       backup_options:
+        filename: "{{inventory_hostname}}"
+        dir_path: configfiles
+        
+

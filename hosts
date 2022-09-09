@@ -1,0 +1,7 @@
+[ion]
+l1-as13-7989
+
+[ion:vars]
+ansible_user=test
+ansible_password=test123
+ansible_connection=local
