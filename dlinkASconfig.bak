@@ -1,6 +1,6 @@
 ---
 - name: Dlink  Standard Configuration
-  hosts: all
+  hosts: L2AS
   gather_facts: false
   #  connection: network_cli
      
@@ -25,7 +25,8 @@
           - logging buffered severity debugging write-delay 3
           - logging server 172.20.2.251 severity debugging facility 23 port 514
           - command logging enable  
-         
+           
+        
       register: print_output
 
     -  debug: var=print_output
@@ -37,26 +38,19 @@
 
     - name: Access port configuration
       ios_config:
-        parents: interface range ethernet 1/0/1-18
+        parents: interface range ethernet 1/0/1-22
         lines:
-           - switchport mode trunk
+           - switchport mode access
+           - switchport port-security
+           - switchport port-security maximum 1
+           - switchport port-security mode permanent
+           - switchport port-security violation protect
       
       register: print_output
 
     -  debug: var=print_output
 
-    - name: shutting down OFC ports
-      ios_config:
-        parents: interface range ethernet 1/0/25-28
-        lines:
-           - shutdown
-
-      register: print_output
-
-    -  debug: var=print_output
-
-  
-    - name: Saving Configuration
+    - name: run commands that require answering a prompt
       ios_command:
        commands:
        - command: 'copy running-config startup-config'

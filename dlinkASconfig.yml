@@ -1,6 +1,6 @@
 ---
 - name: Dlink  Standard Configuration
-  hosts: all
+  hosts: L2AS
   gather_facts: false
   #  connection: network_cli
      
@@ -19,15 +19,14 @@
           - snmp-server name {{inventory_hostname}}      
           - spanning-tree global state enable
           - sntp enable
-          - sntp server 172.20.2.110 
+          - sntp server 172.20.2.251
           - sntp interval 60
           - clock timezone + 5 30
           - logging buffered severity debugging write-delay 3
-          - logging server 172.20.2.110 severity debugging facility 23 port 514
+          - logging server 172.20.2.251 severity debugging facility 23 port 514
           - command logging enable  
-          - username ion password admin123
-          - username ion privilege 15
-         
+           
+        
       register: print_output
 
     -  debug: var=print_output
@@ -35,11 +34,10 @@
 # Configuring...
 # Changing ports mode to access
 # Confguring Switch-port Security
-# Making Access ports Member of VLAN 10
 
     - name: Access port configuration
       ios_config:
-        parents: interface range ethernet 1/0/10-12
+        parents: interface range ethernet 1/0/1-22
         lines:
            - switchport mode access
            - switchport port-security
@@ -51,7 +49,18 @@
 
     -  debug: var=print_output
 
-    - name: run commands that require answering a prompt
+    - name: shutting down OFC ports
+      ios_config:
+        parents: interface range ethernet 1/0/25-28
+        lines:
+           - shutdown
+
+      register: print_output
+
+    -  debug: var=print_output
+
+
+    - name: Saving Configuration
       ios_command:
        commands:
        - command: 'copy running-config startup-config'
