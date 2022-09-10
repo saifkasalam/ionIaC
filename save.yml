@@ -1,0 +1,18 @@
+---
+- name: Dlink  Standard Configuration
+  hosts: L2AS
+  gather_facts: false
+  #  connection: network_cli
+     
+
+  tasks:
+    - name: Saving Configuration
+      ios_command:
+       commands:
+       - command: 'copy running-config startup-config'
+         prompt: 'Destination filename startup-config?'
+         answer: 'y'
+
+
+      register: print_output
+    -  debug: var=print_output

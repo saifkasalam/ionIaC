@@ -1,6 +1,6 @@
 ---
 - name: Dlink  Standard Configuration
-  hosts: all
+  hosts: L2DS
   gather_facts: false
   #  connection: network_cli
      

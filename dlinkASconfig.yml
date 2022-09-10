@@ -25,6 +25,7 @@
           - logging buffered severity debugging write-delay 3
           - logging server 172.20.2.251 severity debugging facility 23 port 514
           - command logging enable  
+          - username admin password admin123
            
         
       register: print_output
@@ -43,7 +44,7 @@
            - switchport port-security
            - switchport port-security maximum 1
            - switchport port-security mode permanent
-           - switchport port-security violation protect
+           - switchport port-security violation restrict
       
       register: print_output
 

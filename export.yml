@@ -1,6 +1,6 @@
 ---
 - name: Exporting Configuration and verifying the Hash Values
-  hosts: all
+  hosts: L2AS
   become: true
   gather_facts: no
   tasks:
