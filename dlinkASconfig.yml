@@ -1,6 +1,6 @@
 ---
 - name: Dlink  Standard Configuration
-  hosts: L2AS
+  hosts: patna
   gather_facts: false
   #  connection: network_cli
      

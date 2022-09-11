@@ -27,3 +27,12 @@ iDZ7966-L2DS2
 ansible_user=admin
 ansible_password=admin
 ansible_connection=local
+
+
+[patna]
+l1-patna
+
+[patna:vars]
+ansible_user=admin
+ansible_password=admin
+ansible_connection=local
