@@ -1,0 +1,37 @@
+---
+
+    - name: Creating Vlans for AS13
+      ios_config:
+        lines:
+          - vlan 2301-2322
+
+      register: print_output
+
+    -  debug: var=print_output
+
+    - name: Access port configuration
+      ios_config:
+        parents: "interface ethernet 1/0/{{item.port}}"
+        lines:
+           - switchport mode access     
+           - "switchport access vlan {{item.vlan}}"
+           
+      with_items:
+           - { port: 1, vlan: 2301 }       
+           - { port: 2, vlan: 2302 }       
+              
+      
+      register: print_output
+
+    -  debug: var=print_output
+
+    - name: run commands that require answering a prompt
+      ios_command:
+       commands:
+       - command: 'copy running-config startup-config'
+         prompt: 'Destination filename startup-config?'
+         answer: 'y'
+
+
+      register: print_output
+    -  debug: var=print_output

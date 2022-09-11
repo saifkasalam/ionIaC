@@ -1,0 +1,33 @@
+---
+- name: Dlink Configuration
+  hosts: all
+  gather_facts: false
+
+  tasks:
+
+     - name: Configuring "{{inventory_hostname}}"
+       include_tasks: "{{item.taskfile}}"
+       run_once: true
+       when: inventory_hostname == '{{item.host}}'
+       with_items:
+              - { taskfile: l1-as13.yml, host: 7989-l1-as13 }
+              - { taskfile: l1-as14.yml, host: 7989-l1-as14 }
+              - { taskfile: l1-as15.yml, host: 7989-l1-as15 }
+              - { taskfile: l1-as16.yml, host: 7989-l1-as16 }
+
+
+      
+       register: print_output
+
+     - debug: var=print_output
+
+     - name: run commands that require answering a prompt
+       ios_command:
+        commands:
+        - command: 'copy running-config startup-config'
+          prompt: 'Destination filename startup-config?'
+          answer: 'y'
+
+
+          register: print_output
+     -  debug: var=print_output
