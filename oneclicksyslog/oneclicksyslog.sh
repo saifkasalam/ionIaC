@@ -12,6 +12,7 @@
 #Installing Rsyslog,ntp and vim
 	sudo apt update -y
 	sudo apt install -y rsyslog 
+	sudo apt install -y ssh 
 	sudo apt install -y ntp
 	sudo apt install -y vim
 
@@ -49,3 +50,7 @@
 
 #Restarting rsyslog service	
 	sudo service rsyslog restart
+
+#Editing /etc/ssh/ssh_config
+	sudo sed -i 's/#   Ciphers aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc/Ciphers aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc/g' /etc/ssh/ssh_config
+
