@@ -54,3 +54,16 @@
 #Editing /etc/ssh/ssh_config
 	sudo sed -i 's/#   Ciphers aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc/Ciphers aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc/g' /etc/ssh/ssh_config
 
+#Editing /etc/ntp.conf for local
+
+	sudo sed -i 's/pool 0.ubuntu.pool.ntp.org iburst/#pool 0.ubuntu.pool.ntp.org iburst/g' /etc/ntp.conf
+	sudo sed -i 's/pool 1.ubuntu.pool.ntp.org iburst/#pool 1.ubuntu.pool.ntp.org iburst/g' /etc/ntp.conf
+	sudo sed -i 's/pool 2.ubuntu.pool.ntp.org iburst/#pool 2.ubuntu.pool.ntp.org iburst/g' /etc/ntp.conf
+	sudo sed -i 's/pool 3.ubuntu.pool.ntp.org iburst/#pool 3.ubuntu.pool.ntp.org iburst/g' /etc/ntp.conf
+	sudo sed -i 's/pool ntp.ubuntu.com/#pool ntp.ubuntu.com/g' /etc/ntp.conf
+        
+	sudo echo server 127.127.1.0 >> /etc/ntp.conf
+	sudo echo fudge 127.127.1.0 stratum 5 >> /etc/ntp.conf
+
+#Removing Duplicate lines	
+	sudo vim -esu NONE +'g/\v^(.*)\n\1$/d' +wq /etc/ntp.conf
