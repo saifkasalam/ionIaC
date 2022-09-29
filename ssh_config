@@ -53,3 +53,4 @@ Host *
     GSSAPIAuthentication yes
     HostkeyAlgorithms +ssh-rsa
     Ciphers aes128-cbc,3des-cbc,aes192-cbc,aes256-cbc
+    KexAlgorithms +diffie-hellman-group1-sha1

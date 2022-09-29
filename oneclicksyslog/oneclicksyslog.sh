@@ -52,8 +52,10 @@
 	sudo service rsyslog restart
 
 #Editing /etc/ssh/ssh_config
-	sudo sed -i 's/#   Ciphers aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc/Ciphers aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc/g' /etc/ssh/ssh_config
-
+	#sudo sed -i 's/#   Ciphers aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc/Ciphers aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc/g' /etc/ssh/ssh_config
+        sudo cp ../ssh_config /etc/ssh/ssh_config
+	sudo service ssh restart
+	
 #Editing /etc/ntp.conf for local
 
 	sudo sed -i 's/pool 0.ubuntu.pool.ntp.org iburst/#pool 0.ubuntu.pool.ntp.org iburst/g' /etc/ntp.conf
