@@ -1,8 +1,17 @@
 ---
-- name: Dlink  Standard Configuration
-  hosts: patna
+- name: Dlink DGS1510-28 Configuration Managment
+  hosts: L1AS
   gather_facts: false
   #  connection: network_cli
+  vars_prompt:
+
+    - name: tccode
+      prompt: What is your tccode?
+      private: no
+
+    - name: lan
+      prompt: What is your lan (Ex-L1,L2)?
+      private: no
      
 # Configuring..... 
 # Hostname
@@ -10,45 +19,79 @@
 # Disabling Telnet
 # Disabling HTTP
 # Configuring NTP Services
-# Creating User
+# Creating new User
+
 
   tasks:
-    - name: Dlink  Global Settings
+    - name: Dlink Standard Configurations
       ios_config:
         lines:
           - snmp-server name {{inventory_hostname}}      
           - spanning-tree global state enable
           - sntp enable
-          - sntp server 172.20.2.251
+          - sntp server 172.20.1.251
           - sntp interval 60
           - clock timezone + 5 30
           - logging buffered severity debugging write-delay 3
-          - logging server 172.20.2.251 severity debugging facility 23 port 514
+          - logging server 172.20.1.251 severity debugging facility 23 port 514
           - command logging enable  
-          - username admin password admin123
-           
-        
-      register: print_output
+          - username 7989 password Rtasbbsr@135
+          - username 7989 privilege 15
+          - service password-encryption
+          - no username admin 
+          - no ip telnet server
 
-    -  debug: var=print_output
+            #register: print_output
+
+            #-  debug: var=print_output
+
+
+    - name: Creating Vlans
+      ios_config:
+         parents: "vlan {{ item.vlan }}"
+         lines:
+            - "name {{ item.name }}"
+      with_items:
+       - { vlan: 100, name: ASSESSMENT }
+       - { vlan: 151, name: MANAGEMNET }
+       
+         # register: print_output
+
+         #- debug: var=print_output 
 
 # Configuring...
 # Changing ports mode to access
 # Confguring Switch-port Security
+    
+    - name: Trunk Port Configuration
+      ios_config:
+        parents: interface range ethernet 1/0/23-24
+        lines:
+           - description UPLINKS
+           - switchport mode trunk
+           
+
+             #register: print_output
+
+             #-  debug: var=print_output
+
 
     - name: Access port configuration
       ios_config:
         parents: interface range ethernet 1/0/1-22
         lines:
+           - description CLIENTSYSTEMS    
            - switchport mode access
+           - switchport access vlan 100  
            - switchport port-security
            - switchport port-security maximum 1
            - switchport port-security mode permanent
            - switchport port-security violation restrict
-      
-      register: print_output
 
-    -  debug: var=print_output
+      
+             #register: print_output
+
+             #-  debug: var=print_output
 
     - name: shutting down OFC ports
       ios_config:
@@ -56,11 +99,100 @@
         lines:
            - shutdown
 
-      register: print_output
+             #register: print_output
 
-    -  debug: var=print_output
+             #-  debug: var=print_output
+    
+    - name: Disabling Interface VLAN1
+      ios_config:
+        parents: interface vlan 1
+        lines:
+           - shutdown
+        
+   
+# Running Switch Specific Configurations
+      
+    - name: Configuring IP Address "{{lan}}AS1"
+      include_tasks: "LAN1/{{lan}}AS1.yml"
+      # run_once: true
+      when: inventory_hostname == 'iDZ{{tccode}}-{{lan}}AS1'
 
+    - name: Configuring IP Address "{{lan}}AS2"
+      include_tasks: "LAN1/L1AS2.yml"
+      #run_once: true
+      when: inventory_hostname == 'iDZ7989-L1AS2'
 
+    - name: Configuring IP Address AS3
+      include_tasks: "LAN1/{{lan}}AS3.yml"
+      #run_once: true
+      when: inventory_hostname == 'iDZ{{tccode}}-{{lan}}AS3'
+
+    - name: Configuring IP Address AS4
+      include_tasks: "LAN1/{{lan}}AS4.yml"
+      #run_once: true
+      when: inventory_hostname == 'iDZ{{tccode}}-{{lan}}AS4'
+
+    - name: Configuring IP Address AS5
+      include_tasks: "LAN1/{{lan}}AS5.yml"
+      #run_once: true
+      when: inventory_hostname == 'iDZ{{tccode}}-{{lan}}AS5'
+
+    - name: Configuring IP Address AS6
+      include_tasks: "LAN1/{{lan}}AS6.yml"
+      #run_once: true
+      when: inventory_hostname == 'iDZ{{tccode}}-{{lan}}AS6'
+
+    - name: Configuring IP Address AS7
+      include_tasks: "LAN1/{{lan}}AS7.yml"
+      #run_once: true
+      when: inventory_hostname == 'iDZ{{tccode}}-{{lan}}AS7'
+
+    - name: Configuring IP Address AS8
+      include_tasks: "LAN1/{{lan}}AS8.yml"
+      #run_once: true
+      when: inventory_hostname == 'iDZ{{tccode}}-{{lan}}AS8'
+
+    - name: Configuring IP Address AS9
+      include_tasks: "LAN1/{{lan}}AS9.yml"
+      #run_once: true
+      when: inventory_hostname == 'iDZ{{tccode}}-{{lan}}AS9'
+
+    - name: Configuring IP Address AS10
+      include_tasks: "LAN1/{{lan}}AS10.yml"
+      #run_once: true
+      when: inventory_hostname == 'iDZ{{tccode}}-{{lan}}AS10'
+
+    - name: Configuring IP Address AS11
+      include_tasks: "LAN1/{{lan}}AS11.yml"
+      #run_once: true
+      when: inventory_hostname == 'iDZ{{tccode}}-{{lan}}AS11'
+
+    - name: Configuring IP Address AS12
+      include_tasks: "LAN1/{{lan}}AS12.yml"
+      #run_once: true
+      when: inventory_hostname == 'iDZ{{tccode}}-{{lan}}AS12'
+
+    - name: Configuring IP Address AS13
+      include_tasks: "LAN1/{{lan}}AS13.yml"
+      #run_once: true
+      when: inventory_hostname == 'iDZ{{tccode}}-{{lan}}AS13'
+
+    - name: Configuring IP Address AS14
+      include_tasks: "LAN1/{{lan}}AS14.yml"
+      #run_once: true
+      when: inventory_hostname == 'iDZ{{tccode}}-{{lan}}AS14'
+
+    - name: Configuring IP Address AS15
+      include_tasks: "LAN1/{{lan}}AS15.yml"
+      #run_once: true
+      when: inventory_hostname == 'iDZ{{tccode}}-{{lan}}AS15'
+
+    - name: Configuring IP Address AS16
+      include_tasks: "LAN1/{{lan}}AS16.yml"
+      #run_once: true
+      when: inventory_hostname == 'iDZ{{tccode}}-{{lan}}AS16'
+
+   
     - name: Saving Configuration
       ios_command:
        commands:
@@ -69,5 +201,5 @@
          answer: 'y'
 
 
-      register: print_output
-    -  debug: var=print_output
+         #register: print_output
+         #-  debug: var=print_output

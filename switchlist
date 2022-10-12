@@ -1,38 +1,32 @@
-[L2AS]
-iDZ7966-L2AS1
-iDZ7966-L2AS2
-iDZ7966-L2AS3
-iDZ7966-L2AS4
-iDZ7966-L2AS5
-iDZ7966-L2AS6
-iDZ7966-L2AS7
-iDZ7966-L2AS8
-iDZ7966-L2AS9
-iDZ7966-L2AS10
-iDZ7966-L2AS11
-iDZ7966-L2AS12
-iDZ7966-L2AS13
-iDZ7966-L2AS14
+[L1AS]
+iDZ7989-L1AS1
+iDZ7989-L1AS2
+iDZ7989-L1AS3
+iDZ7989-L1AS4
+iDZ7989-L1AS5
+iDZ7989-L1AS6
+iDZ7989-L1AS7
+iDZ7989-L1AS8
+iDZ7989-L1AS9
+iDZ7989-L1AS10
+iDZ7989-L1AS11
+iDZ7989-L1AS12
+iDZ7989-L1AS13
+iDZ7989-L1AS14
+iDZ7989-L1AS15
+iDZ7989-L1AS16
 
-[L2AS:vars]
-ansible_user=admin
-ansible_password=admin123
+[L1AS:vars]
+ansible_user=7989
 ansible_connection=local
 
-[L2DS]
-iDZ7966-L2DS1
-iDZ7966-L2DS2
+[L1DS]
+iDZ7989-L1DS1
+iDZ7989-L1DS2
 
-[L2DS:vars]
-ansible_user=admin
-ansible_password=admin
+[L1DS:vars]
+ansible_user=7989
 ansible_connection=local
 
 
-[patna]
-l1-patna
 
-[patna:vars]
-ansible_user=admin
-ansible_password=admin
-ansible_connection=local

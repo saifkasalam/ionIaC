@@ -1,0 +1,28 @@
+---
+
+    - name: Setting priority 4096 on L1DS2
+      ios_config:
+        lines:
+          - spanning-tree priority 4096
+
+      register: print_output
+
+    -  debug: var=print_output
+    
+    - name: Configure L1DS2 Specific
+      ios_config:
+         parents: interface vlan 151
+         lines:
+            - ip address 172.20.1.102 255.255.0.0
+
+
+    - name: Saving Configuration...
+      ios_command:
+       commands:
+       - command: 'copy running-config startup-config'
+         prompt: 'Destination filename startup-config?'
+         answer: 'y'
+
+
+      register: print_output
+    -  debug: var=print_output

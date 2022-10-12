@@ -1,0 +1,91 @@
+---
+- name: Dlink  Standard Configuration
+  hosts: iDZ7989-L1AS1
+  gather_facts: false
+  #  connection: network_cli
+     
+# Configuring..... 
+# Hostname
+# Enabling Spanning Tree
+# Disabling Telnet
+# Disabling HTTP
+# Configuring NTP Services
+# Creating new User
+
+
+  tasks:
+    - name: Dlink  Global Settings
+      ios_config:
+        lines:
+          - snmp-server name {{inventory_hostname}}      
+          - spanning-tree global state enable
+          - sntp enable
+          - sntp server 172.20.1.251
+          - sntp interval 60
+          - clock timezone + 5 30
+          - logging buffered severity debugging write-delay 3
+          - logging server 172.20.1.251 severity debugging facility 23 port 514
+          - command logging enable  
+          - username 7989 password admin123
+          - username 7989 privilege 15
+          - service password-encryption
+           
+        
+      register: print_output
+
+    -  debug: var=print_output
+
+
+    - name: Creating Vlans
+      ios_config:
+         parents: "vlan {{ item.vlan }}"
+         lines:
+            - "name {{ item.name }}"
+      with_items:
+       - { vlan: 100, name: ASSESSMENT }
+       - { vlan: 151, name: MANAGEMNET }
+       
+      register: print_output
+
+    - debug: var=print_output 
+
+# Configuring...
+# Changing ports mode to access
+# Confguring Switch-port Security
+
+    - name: Access port configuration
+      ios_config:
+        parents: interface range ethernet 1/0/1-22
+        lines:
+           - description CLIENT SYSTEMS     
+           - switchport mode access
+           - switchport port-security
+           - switchport port-security maximum 1
+           - switchport port-security mode permanent
+           - switchport port-security violation restrict
+      
+      register: print_output
+
+    -  debug: var=print_output
+
+    - name: shutting down OFC ports
+      ios_config:
+        parents: interface range ethernet 1/0/25-28
+        lines:
+           - shutdown
+
+      register: print_output
+
+    -  debug: var=print_output
+
+
+    - name: Saving Configuration
+      ios_command:
+       commands:
+       - command: 'copy running-config startup-config'
+         prompt: 'Destination filename startup-config?'
+         answer: 'y'
+
+
+      register: print_output
+    -  debug: var=print_output

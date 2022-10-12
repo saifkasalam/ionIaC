@@ -1,8 +1,17 @@
 ---
 - name: Dlink  Standard Configuration
-  hosts: L2DS
+  hosts: L1DS
   gather_facts: false
   #  connection: network_cli
+  vars_prompt:
+
+    - name: tccode
+      prompt: What is your tccode?
+      private: no
+    
+    - name: lan
+      prompt: What is your LAN (ex-L1,L2)?
+      private: no
      
 # Configuring..... 
 # Hostname
@@ -19,31 +28,59 @@
           - snmp-server name {{inventory_hostname}}      
           - spanning-tree global state enable
           - sntp enable
-          - sntp server 172.20.2.251
+          - sntp server 172.20.1.251
           - sntp interval 60
           - clock timezone + 5 30
           - logging buffered severity debugging write-delay 3
-          - logging server 172.20.2.251 severity debugging facility 23 port 514
+          - logging server 172.20.1.251 severity debugging facility 23 port 514
           - command logging enable  
+          - service password-encryption
+          - username 7989 password Rtasbbsr@135
+          - username 7989 privilege 15
+          - no username admin 
+          - no ip telnet server  
          
-      register: print_output
+            #register: print_output
 
-    -  debug: var=print_output
+            #-  debug: var=print_output
 
 # Configuring...
 # Changing ports mode to access
 # Confguring Switch-port Security
-# Making Access ports Member of VLAN 10
+# Making Access ports Member of VLAN 100
 
-    - name: Access port configuration
+    - name: Trunk port configuration
       ios_config:
         parents: interface range ethernet 1/0/1-18
         lines:
+           - description AccessSwitches     
            - switchport mode trunk
       
-      register: print_output
+             # register: print_output
 
-    -  debug: var=print_output
+             #-  debug: var=print_output
+    
+    - name: Access port configuration for servers
+      ios_config:
+        parents: interface range ethernet 1/0/22-24
+        lines:
+           - description SERVERPORTS     
+           - switchport mode access
+           - switchport acces vlan 100
+
+    - name: Access port configuration for syslog and Management
+      ios_config:
+        parents: interface range ethernet 1/0/20-21
+        lines:
+           - description Management
+           - switchport mode access
+           - switchport acces vlan 151
+
+
+             #register: print_output
+
+             #-  debug: var=print_output
+  
 
     - name: shutting down OFC ports
       ios_config:
@@ -51,9 +88,34 @@
         lines:
            - shutdown
 
-      register: print_output
+             #register: print_output
 
-    -  debug: var=print_output
+             #-  debug: var=print_output
+      
+    - name: Disabling Interface VLAN1
+      ios_config:
+        parents: interface vlan 1
+        lines:
+           - shutdown
+
+
+    # Replace your TC-CODE in the below two lines "when: inventory_hostname == 'iDZ7989----"
+    
+
+    - name: Configuring IP Address "{{lan}}DS1"
+      include_tasks: "LAN1/{{lan}}DS1.yml"
+      #run_once: true
+      when: inventory_hostname == 'iDZ{{tccode}}-{{lan}}DS1'
+
+    - name: Configuring IP Address "{{lan}}DS2"
+      include_tasks: "LAN1/{{lan}}DS2.yml"
+      #run_once: true
+      when: inventory_hostname == 'iDZ{{tccode}}-{{lan}}DS2'
+
+
+      #register: print_output
+
+      #-  debug: var=print_output
 
   
     - name: Saving Configuration
@@ -64,5 +126,5 @@
          answer: 'y'
 
 
-      register: print_output
-    -  debug: var=print_output
+         #register: print_output
+         #-  debug: var=print_output

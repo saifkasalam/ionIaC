@@ -1,0 +1,13 @@
+---
+
+    - name: Configure L1AS11 specific
+      ios_config:
+         parents: interface vlan 151
+         lines:
+            - ip address 172.20.1.11 255.255.0.0
+
+      register: print_output
+
+    - debug: var=print_output
+
+
