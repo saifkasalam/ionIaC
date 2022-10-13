@@ -35,7 +35,7 @@
           - logging server 172.20.1.251 severity debugging facility 23 port 514
           - command logging enable  
           - service password-encryption
-          - username 7989 password Rtasbbsr@135
+          - username 7989 password 7989#135
           - username 7989 privilege 15
           - no username admin 
           - no ip telnet server  
@@ -48,7 +48,20 @@
 # Changing ports mode to access
 # Confguring Switch-port Security
 # Making Access ports Member of VLAN 100
+     
+    - name: Creating Vlans
+      ios_config:
+         parents: "vlan {{ item.vlan }}"
+         lines:
+            - "name {{ item.name }}"
+      with_items:
+       - { vlan: 100, name: ASSESSMENT }
+       - { vlan: 151, name: MANAGEMNET }
 
+         # register: print_output
+
+         #- debug: var=print_output 
+        
     - name: Trunk port configuration
       ios_config:
         parents: interface range ethernet 1/0/1-18

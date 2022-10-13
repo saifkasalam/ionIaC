@@ -35,7 +35,7 @@
           - logging buffered severity debugging write-delay 3
           - logging server 172.20.1.251 severity debugging facility 23 port 514
           - command logging enable  
-          - username 7989 password Rtasbbsr@135
+          - username 7989 password 7989#135 
           - username 7989 privilege 15
           - service password-encryption
           - no username admin 
